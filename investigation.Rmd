@@ -16,14 +16,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-lib, message = FALSE}
 library(tidyverse)
-# Add any other libraries here
-
+install.packages("readr")
+library(readr)
 
 
 ```
 
 
 ```{r load-data}
+my_data <- read_csv()
 # load your data 
 
 
