@@ -16,16 +16,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-lib, message = FALSE}
 library(tidyverse)
-install.packages("readr")
-library(readr)
-
-
+library(cherryblossom)  
+library(ggplot2)
 ```
 
 
 ```{r load-data}
-my_data <- read_csv()
 # load your data 
+data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
+# data wrangling
+library(dplyr)
+data <- data %>%
+  filter(!is.na(Price)) %>%
+  mutate(TypeName = as.factor(TypeName), 
+         Cpu_brand = as.factor(Cpu_brand))
+
+summary(data)
+ggplot(data, aes(x = Ram, y = Price)) + geom_point() + geom_smooth(method = 'lm')
 
 
 
