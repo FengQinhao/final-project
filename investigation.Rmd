@@ -16,79 +16,100 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-lib, message = FALSE}
 library(tidyverse)
-library(cherryblossom)  
+library(Metrics)
 library(ggplot2)
-library(caTools)
 ```
 
 
 ```{r load-data}
 # load your data 
-data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
+laptop_data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
 
-# Data cleaning
-data <- data %>%
-  filter(!is.na(Price)) %>%  # Remove rows with missing Price
-  mutate(TypeName = as.factor(TypeName), 
-         Cpu_brand = as.factor(Cpu_brand))
+# Preview the data
+head(laptop_data)
 
-# Data exploration
-summary(data)
+# Check for missing values
+colSums(is.na(laptop_data))
 
-# Visualize the distribution of the Price variable
-ggplot(data, aes(x = Price)) + 
-  geom_histogram(binwidth = 100, fill = "skyblue", color = "black", alpha = 0.7) +
+# Remove missing values
+laptop_data <- laptop_data %>% drop_na()
+
+# Ensure numeric columns are correctly typed
+laptop_data$Price <- as.numeric(laptop_data$Price)
+laptop_data$Ram <- as.numeric(laptop_data$Ram)
+laptop_data$Weight <- as.numeric(laptop_data$Weight)
+laptop_data$Ppi <- as.numeric(laptop_data$Ppi)
+
+# Convert categorical variables to factors
+laptop_data$TypeName <- as.factor(laptop_data$TypeName)
+laptop_data$Cpu_brand <- as.factor(laptop_data$Cpu_brand)
+
+# Descriptive statistics
+summary(laptop_data)
+
+# Correlation matrix
+cor_matrix <- laptop_data %>%
+  select(Price, Ram, Weight, Ppi) %>%
+  cor()
+print(cor_matrix)
+
+# Price distribution plot
+ggplot(laptop_data, aes(x = Price)) +
+  geom_histogram(fill = "blue", bins = 30, color = "black") +
   labs(title = "Price Distribution", x = "Price", y = "Frequency")
 
-# Visualize the relationship between RAM and Price
-ggplot(data, aes(x = Ram, y = Price)) + 
-  geom_point(aes(color = Cpu_brand), alpha = 0.7) +
-  geom_smooth(method = 'lm', se = FALSE, color = "red") + 
-  labs(title = "RAM vs. Price", x = "RAM (GB)", y = "Price")
+# RAM vs Price
+ggplot(laptop_data, aes(x = Ram, y = Price, color = TypeName)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "RAM vs Price", x = "RAM (GB)", y = "Price")
 
-# Visualize the relationship between Weight and Price
-ggplot(data, aes(x = Weight, y = Price)) + 
-  geom_point(aes(color = Cpu_brand), alpha = 0.7) +
-  geom_smooth(method = 'lm', se = FALSE, color = "green") + 
-  labs(title = "Weight vs. Price", x = "Weight (kg)", y = "Price")
+# Price by CPU Brand
+ggplot(laptop_data, aes(x = Cpu_brand, y = Price, fill = Cpu_brand)) +
+  geom_boxplot() +
+  labs(title = "Price by CPU Brand", x = "CPU Brand", y = "Price")
 
-# Visualize the distribution of the Weight variable
-ggplot(data, aes(x = Weight)) + 
-  geom_histogram(binwidth = 0.5, fill = "lightgreen", color = "black", alpha = 0.7) +
-  labs(title = "Weight Distribution", x = "Weight (kg)", y = "Frequency")
+# One-hot encoding
+laptop_data <- laptop_data %>%
+  mutate(across(where(is.factor), ~ as.numeric(as.factor(.)) - 1))
 
-# Split the dataset into training and testing sets
+# Split into training and testing datasets
 set.seed(123)
-split <- sample.split(data$Price, SplitRatio = 0.8)  # 80% training, 20% testing
-train <- subset(data, split == TRUE)
-test <- subset(data, split == FALSE)
+train_index <- sample(1:nrow(laptop_data), 0.8 * nrow(laptop_data))
+train_data <- laptop_data[train_index, ]
+test_data <- laptop_data[-train_index, ]
 
-# Train the linear regression model
-model <- lm(Price ~ Ram + Weight + Ppi, data = train)
-summary(model)
+# Extract features and target
+X_train <- train_data %>% select(-Price)
+y_train <- train_data$Price
+X_test <- test_data %>% select(-Price)
+y_test <- test_data$Price
 
-# Comment on suitability model
-plot(model, which = 1)
-plot(model, which = 2)
-plot(model, which = 3)
-plot(model, which = 4)
-plot(model, which = 5)
+# Train linear regression model
+linear_model <- lm(Price ~ ., data = train_data)
 
-# Prediction and evaluation
-pred <- predict(model, test)  # Predict on the test set
-rmse <- sqrt(mean((test$Price - pred)^2))  # Calculate Root Mean Square Error (RMSE)
-r2 <- 1 - sum((test$Price - pred)^2) / sum((test$Price - mean(test$Price))^2)  # Calculate R-squared
+# Model evaluation
+summary(linear_model)
 
-# Output RMSE and R-squared
-print(paste("RMSE: ", rmse))
-print(paste("R-squared: ", r2))
+# Predict on test data
+y_pred_linear <- predict(linear_model, newdata = test_data)
 
-# Residual analysis
-residuals <- test$Price - pred
-ggplot(data.frame(residuals), aes(x = residuals)) +
-  geom_histogram(binwidth = 100, fill = "lightblue", color = "black", alpha = 0.7) +
-  labs(title = "Residuals Distribution", x = "Residuals", y = "Frequency")
+# Calculate RMSE
+rmse_linear <- rmse(y_test, y_pred_linear)
+cat("Linear Regression RMSE:", rmse_linear, "\n")
 
+# Actual vs Predicted (Linear Regression)
+ggplot(data.frame(Actual = y_test, Predicted = y_pred_linear), aes(x = Actual, y = Predicted)) +
+  geom_point(color = "blue", alpha = 0.6) +
+  geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
+  labs(title = "Actual vs Predicted (Linear Regression)", x = "Actual Price", y = "Predicted Price")
+
+# Comment on model
+plot(linear_model, which = 1)
+plot(linear_model, which = 2)
+plot(linear_model, which = 3)
+plot(linear_model, which = 4)
+plot(linear_model, which = 5)
 ```
 
 
