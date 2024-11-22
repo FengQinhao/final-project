@@ -87,9 +87,11 @@ y_test <- test_data$Price
 
 # Train linear regression model
 linear_model <- lm(Price ~ ., data = train_data)
+improve_model_data <- train_data %>% select(-Cpu_brand, -HDD, -TouchScreen)
+linear_improve <- lm(Price ~ ., data = improve_model_data)
 
 # Model evaluation
-summary(linear_model)
+summary(linear_improve)
 
 # Predict on test data
 y_pred_linear <- predict(linear_model, newdata = test_data)
