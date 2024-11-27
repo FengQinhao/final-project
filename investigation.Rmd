@@ -22,7 +22,7 @@ library(ggplot2)
 
 
 ```{r load-data}
-# load your data 
+# Load your data
 laptop_data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
 
 # Preview the data
@@ -47,7 +47,7 @@ laptop_data$Cpu_brand <- as.factor(laptop_data$Cpu_brand)
 # Descriptive statistics
 summary(laptop_data)
 
-# Correlation matrix
+# Correlation matrix for numeric variables
 cor_matrix <- laptop_data %>%
   select(Price, Ram, Weight, Ppi) %>%
   cor()
@@ -58,7 +58,7 @@ ggplot(laptop_data, aes(x = Price)) +
   geom_histogram(fill = "blue", bins = 30, color = "black") +
   labs(title = "Price Distribution", x = "Price", y = "Frequency")
 
-# RAM vs Price
+# RAM vs Price by TypeName
 ggplot(laptop_data, aes(x = Ram, y = Price, color = TypeName)) +
   geom_point(alpha = 0.6) +
   geom_smooth(method = "lm", se = FALSE) +
@@ -69,49 +69,38 @@ ggplot(laptop_data, aes(x = Cpu_brand, y = Price, fill = Cpu_brand)) +
   geom_boxplot() +
   labs(title = "Price by CPU Brand", x = "CPU Brand", y = "Price")
 
-# One-hot encoding
-laptop_data <- laptop_data %>%
-  mutate(across(where(is.factor), ~ as.numeric(as.factor(.)) - 1))
-
 # Split into training and testing datasets
 set.seed(123)
 train_index <- sample(1:nrow(laptop_data), 0.8 * nrow(laptop_data))
 train_data <- laptop_data[train_index, ]
 test_data <- laptop_data[-train_index, ]
 
-# Extract features and target
-X_train <- train_data %>% select(-Price)
-y_train <- train_data$Price
-X_test <- test_data %>% select(-Price)
-y_test <- test_data$Price
-
-# Train linear regression model
-linear_model <- lm(Price ~ ., data = train_data)
-improve_model_data <- train_data %>% select(-Cpu_brand, -HDD, -TouchScreen)
-linear_improve <- lm(Price ~ ., data = improve_model_data)
+# Train improved linear regression model
+linear_model <- lm(
+  Price ~ Ram + Weight + Ppi + SSD + Cpu_brand + TypeName + Ram:TypeName,
+  data = train_data
+)
 
 # Model evaluation
-summary(linear_improve)
+summary(linear_model)
 
 # Predict on test data
-y_pred_linear <- predict(linear_model, newdata = test_data)
+y_pred <- predict(linear_model, newdata = test_data)
 
 # Calculate RMSE
-rmse_linear <- rmse(y_test, y_pred_linear)
-cat("Linear Regression RMSE:", rmse_linear, "\n")
+rmse_value <- rmse(test_data$Price, y_pred)
+cat("Final Model RMSE:", rmse_value, "\n")
 
-# Actual vs Predicted (Linear Regression)
-ggplot(data.frame(Actual = y_test, Predicted = y_pred_linear), aes(x = Actual, y = Predicted)) +
+# Actual vs Predicted Plot
+ggplot(data.frame(Actual = test_data$Price, Predicted = y_pred), aes(x = Actual, y = Predicted)) +
   geom_point(color = "blue", alpha = 0.6) +
   geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
-  labs(title = "Actual vs Predicted (Linear Regression)", x = "Actual Price", y = "Predicted Price")
+  labs(title = "Actual vs Predicted (Final Model)", x = "Actual Price", y = "Predicted Price")
 
-# Comment on model
-plot(linear_model, which = 1)
-plot(linear_model, which = 2)
-plot(linear_model, which = 3)
-plot(linear_model, which = 4)
-plot(linear_model, which = 5)
+# Residual diagnostics
+par(mfrow = c(2, 2))  # Arrange plots in 2x2 grid
+plot(linear_model)
+
 ```
 
 
