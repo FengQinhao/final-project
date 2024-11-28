@@ -88,7 +88,7 @@ ggplot(data.frame(Actual = test_data$Price, Predicted = y_pred), aes(x = Actual,
   labs(title = "Actual vs Predicted (Linear Model)", x = "Actual Price", y = "Predicted Price")
 
 # Residual diagnostics
-par(mfrow = c(2, 2))  # Arrange plots in 2x2 grid
+par(mfrow = c(2, 2))  
 plot(linear_model)
 
 ```
