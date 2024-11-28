@@ -30,6 +30,8 @@ library(tidymodels)
 library(palmerpenguins)
 library(knitr)
 library(xaringanthemer)
+library(gt)
+library(kableExtra)
 ```
 
 ```{r setup, include=FALSE}
@@ -56,16 +58,20 @@ class: center, middle
 
 ---
 
-
-# Data Discription
+class: center, middle
+## Data Discription
 ```{R table1, echo = FALSE}
-
 # a boring regression
 laptop_data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
-
-# Preview the data
-head(laptop_data)
+# Remove missing values
+laptop_data <- laptop_data %>% drop_na()
+# Show tibble
+laptop_data %>%
+  summary() %>%
+  kable(format = "html") %>%
+  kable_styling(font_size = 11)
 ```
+
 ---
 
 class:  middle, center
@@ -79,83 +85,67 @@ ggplot(laptop_data, aes(x = Price)) +
 ```
 ---
 
-# xaringan
+class:  middle, center 
 
-- The presentation is created using the `xaringan` package
+# Model Building
+## p-value > 0.05
+Some Companies, Touchscreen, TypeName, Cpu_brand, HDD
+## p-value < 0.05
+Ram (RAM size), Weight (weight), Ppi (pixel density), SSD (solid-state drive size)
+```{R table2, echo = FALSE}
+# Split into training and testing datasets
+set.seed(123)
+train_index <- sample(1:nrow(laptop_data), 0.8 * nrow(laptop_data))
+train_data <- laptop_data[train_index, ]
+test_data <- laptop_data[-train_index, ]
 
-- Use `---` to separate slides and `--` for incremental builds
+# Train improved linear regression model
+linear_model <- lm(
+  Price ~ Weight + Ppi + SSD + Cpu_brand + TypeName + Ram,
+  data = train_data
+)
+linear_model_2 <- lm(Price ~ ., data = train_data)
 
---
+# Predict on test data
+y_pred <- predict(linear_model, newdata = test_data)
+```
 
-- Like this
+
+---
+class:  middle, center
+# Model Building
+## Multiple R-squared:  0.8024, Adjusted R-squared:  0.7999
+## Linear Model RMSE: 0.2995415
+```{R table3, echo = FALSE}
+# Actual vs Predicted Plot
+
+```
 
 ---
 
-# Layouts
-
-You can use plain text
-
-- or bullet points
-
-.pull-left[
-or text in two columns $^*$
-]
-.pull-right[
-- like
-- this
-]
-
-.footnote[
-[*] And add footnotes
-]
-
----
-
-# Code
-
+# Model Building
 ```{r boring-regression,echo=FALSE}
-# a boring regression
-laptop_data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
-
-# Preview the data
-head(laptop_data)
+ggplot(data.frame(Actual = test_data$Price, Predicted = y_pred), aes(x = Actual, y = Predicted)) +
+  geom_point(color = "blue", alpha = 0.6) +
+  geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
+  labs(title = "Actual vs Predicted (Linear Model)", x = "Actual Price", y = "Predicted Price")
 ```
 
 ---
 
-# Plots
-
-```{r recode-species, echo = FALSE}
-# In this chunk I'm doing a bunch of analysis that I don't want to present 
-# in my slides. But I need the resulting data frame for a plot I want to present.
-iris_modified <- iris %>%
-  mutate(Species = fct_other(Species, keep = "setosa"))
-```
+# Model checking
 
 ```{r plot-iris, echo = FALSE}
-# Code hidden with echo = FALSE
-# Uses modified iris dataset from previous chunk
-# Play around with height and width until you're happy with the look
-ggplot(data = iris_modified, mapping = aes(x = Sepal.Width, y = Sepal.Length, color = Species)) +
-  geom_point() + 
-  theme_minimal() # theme options: https://ggplot2.tidyverse.org/reference/ggtheme.html
+par(mfrow = c(2, 2))  
+plot(linear_model)
 ```
 
 ---
 
 ## Plot and text
 
-.pull-left[
-- Some text
-- goes here
-]
-.pull-right[
 ```{r warning=FALSE, out.width="100%", fig.width=4, echo=FALSE}
-# see how I changed out.width and fig.width from defaults
-# to make the figure bigger
-ggplot(penguins, aes(x = bill_length_mm, y = species, color = species)) +
-  geom_boxplot() +
-  theme_minimal()
+
 ```
 ]
 
@@ -174,7 +164,7 @@ kable(head(iris), format = "html")
 # Images
 
 ```{r castle, echo = FALSE, out.width = "55%", fig.align = "center", fig.cap = "Image credit: Photo by Jörg Angeli on Unsplash."}
-include_graphics("img/edinburgh-castle.jpg")
+include_graphics("截屏2024-11-28 23.20.11.png")
 ```
 
 Or you can also include a full page image. See next slide.

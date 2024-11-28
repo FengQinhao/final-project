@@ -76,9 +76,6 @@ linear_model_2 <- lm(Price ~ ., data = train_data)
 summary(linear_model)
 summary(linear_model_2)
 
-# Model evaluation
-summary(linear_model)
-
 # Predict on test data
 y_pred <- predict(linear_model, newdata = test_data)
 
