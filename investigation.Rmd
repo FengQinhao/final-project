@@ -34,22 +34,12 @@ colSums(is.na(laptop_data))
 # Remove missing values
 laptop_data <- laptop_data %>% drop_na()
 
-# Ensure numeric columns are correctly typed
-laptop_data$Price <- as.numeric(laptop_data$Price)
-laptop_data$Ram <- as.numeric(laptop_data$Ram)
-laptop_data$Weight <- as.numeric(laptop_data$Weight)
-laptop_data$Ppi <- as.numeric(laptop_data$Ppi)
-
-# Convert categorical variables to factors
-laptop_data$TypeName <- as.factor(laptop_data$TypeName)
-laptop_data$Cpu_brand <- as.factor(laptop_data$Cpu_brand)
-
 # Descriptive statistics
 summary(laptop_data)
 
 # Correlation matrix for numeric variables
 cor_matrix <- laptop_data %>%
-  select(Price, SSD, Weight, Ppi) %>%
+  select(Price, SSD, Weight, Ppi, Ram) %>%
   cor()
 print(cor_matrix)
 
@@ -77,7 +67,7 @@ test_data <- laptop_data[-train_index, ]
 
 # Train improved linear regression model
 linear_model <- lm(
-  Price ~ Weight + Ppi + SSD + Cpu_brand + TypeName,
+  Price ~ Weight + Ppi + SSD + Cpu_brand + TypeName + Ram,
   data = train_data
 )
 
