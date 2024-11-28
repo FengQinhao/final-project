@@ -1,7 +1,6 @@
 ---
-title: "Presentation title"
-subtitle: "Presentation subtitle (if any)"
-author: "Team name <br> Names of team members"
+title: "Predictive Analytics for Laptop Prices"
+author: "SuspiciousEmoji <br> Zhenye Cao, Siran Luo, Yunxi Guan,Zongyang Jin, Tianmu Xu , Tianmoo Xu"
 institute: "University of Edinburgh"
 date: "`r Sys.Date()`"
 output:
@@ -52,29 +51,32 @@ style_xaringan(
 ```
 
 class: center, middle
-
-## A statement of the overall goal / research question
-
----
-
-class: inverse, center, middle
-
-# Section title
+# introduction
+## Analyse the brand, hardware and other factors, to provide users with a laptop buying guide
 
 ---
 
-# Hello World
 
-- Click the `Knit` button to compile your presentation
+# Data Discription
+```{R table1, echo = FALSE}
 
-- Make sure to commit and push all resulting files to your GitHub repo
+# a boring regression
+laptop_data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
 
+# Preview the data
+head(laptop_data)
+```
 ---
 
-class: inverse, middle, center
+class:  middle, center
 
-# Using xaringan
-
+# Model Building
+```{R graph, echo = FALSE}
+# Price distribution plot
+ggplot(laptop_data, aes(x = Price)) +
+  geom_histogram(fill = "blue", bins = 30, color = "black") +
+  labs(title = "Price Distribution", x = "Price", y = "Frequency")
+```
 ---
 
 # xaringan
@@ -111,11 +113,12 @@ or text in two columns $^*$
 
 # Code
 
-```{r boring-regression}
+```{r boring-regression,echo=FALSE}
 # a boring regression
-model <- lm(dist ~ speed, data = cars)
-tidy(model)
-glance(model)
+laptop_data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
+
+# Preview the data
+head(laptop_data)
 ```
 
 ---

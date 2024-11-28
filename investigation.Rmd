@@ -70,6 +70,11 @@ linear_model <- lm(
   Price ~ Weight + Ppi + SSD + Cpu_brand + TypeName + Ram,
   data = train_data
 )
+linear_model_2 <- lm(Price ~ ., data = train_data)
+
+# Model evaluation
+summary(linear_model)
+summary(linear_model_2)
 
 # Model evaluation
 summary(linear_model)
