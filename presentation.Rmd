@@ -164,7 +164,7 @@ kable(head(iris), format = "html")
 # Images
 
 ```{r castle, echo = FALSE, out.width = "55%", fig.align = "center", fig.cap = "Image credit: Photo by Jörg Angeli on Unsplash."}
-include_graphics("截屏2024-11-28 23.20.11.png")
+include_graphics("111.png")
 ```
 
 Or you can also include a full page image. See next slide.
