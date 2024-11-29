@@ -23,7 +23,7 @@ library(ggplot2)
 
 ```{r load-data}
 # Load your data
-laptop_data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
+laptop_data <- read.csv("~/final-project/data/laptop_data_cleaned.csv")
 
 # Preview the data
 head(laptop_data)
