@@ -64,7 +64,7 @@ class: center, middle
 ## Data Discription
 ```{R table1, echo = FALSE}
 # a boring regression
-laptop_data <- read.csv("~/final project/data/laptop_data_cleaned.csv")
+laptop_data <- read.csv("~/final-project/data/laptop_data_cleaned.csv")
 # Remove missing values
 laptop_data <- laptop_data %>% drop_na()
 # Show tibble
