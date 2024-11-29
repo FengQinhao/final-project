@@ -48,11 +48,13 @@ knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618,
 
 #Background image
 style_xaringan(
-  title_slide_background_image = "img/confetti.jpg"
+  title_slide_background_image = "img/bcak2.jpeg"
 )
 ```
 
-class: center, middle
+
+
+class: inverse,center, middle
 # introduction
 ## Analyse the brand, hardware and other factors, to provide users with a laptop buying guide
 
@@ -71,6 +73,8 @@ laptop_data %>%
   kable(format = "html") %>%
   kable_styling(font_size = 11)
 ```
+
+
 
 ---
 
@@ -110,17 +114,6 @@ linear_model_2 <- lm(Price ~ ., data = train_data)
 y_pred <- predict(linear_model, newdata = test_data)
 ```
 
-
----
-class:  middle, center
-# Model Building
-## Multiple R-squared:  0.8024, Adjusted R-squared:  0.7999
-## Linear Model RMSE: 0.2995415
-```{R table3, echo = FALSE}
-# Actual vs Predicted Plot
-
-```
-
 ---
 
 # Model Building
@@ -134,7 +127,6 @@ ggplot(data.frame(Actual = test_data$Price, Predicted = y_pred), aes(x = Actual,
 ---
 
 # Model checking
-
 ```{r plot-iris, echo = FALSE}
 par(mfrow = c(2, 2))  
 plot(linear_model)
@@ -142,68 +134,17 @@ plot(linear_model)
 
 ---
 
-## Plot and text
-
-```{r warning=FALSE, out.width="100%", fig.width=4, echo=FALSE}
-
-```
-]
-
----
-
-# Tables
-
-If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
-
-```{r iris-table, echo = FALSE}
-kable(head(iris), format = "html")
+# Data interpretation
+```{r graph3, echo=FALSE,out.width = "80%"}
+knitr::include_graphics("img/222.jpg")
 ```
 
+
 ---
-
-# Images
-
-```{r castle, echo = FALSE, out.width = "55%", fig.align = "center", fig.cap = "Image credit: Photo by Jörg Angeli on Unsplash."}
-include_graphics("111.png")
+# Data interpretation
+```{r graph4, echo=FALSE,out.width = "80%"}
+knitr::include_graphics("img/111.jpg")
 ```
 
-Or you can also include a full page image. See next slide.
-
----
 
 
-class: inverse, center, middle
-background-image: url(img/edinburgh-castle.jpg)
-background-size: contain
----
-
-# Math Expressions
-
-You can write LaTeX math expressions inside a pair of dollar signs, e.g. &#36;\alpha+\beta$ renders $\alpha+\beta$. You can use the display style with double dollar signs:
-
-```
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-```
-
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-
-Limitations:
-
-1. The source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting `$$` must appear in the very beginning of a line, followed immediately by a non-space character, and the ending `$$` must be at the end of a line, led by a non-space character;
-
-1. There should not be spaces after the opening `$` or before the closing `$`.
-
-1. Math does not work on the title slide (see [#61](https://github.com/yihui/xaringan/issues/61) for a workaround).
-
----
-
-# Feeling adventurous?
-
-- Want to find out more about `xaringan`? See https://slides.yihui.name/xaringan/#1.
-
-- You are welcome to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
-
-- But some of you might want to play around with slide styling. The 
-`xaringanthemer` provides some solutions for this that: https://pkg.garrickadenbuie.com/xaringanthemer.
-
-- And if you want more bells and whistles, there is also `xaringanExtra`: https://pkg.garrickadenbuie.com/xaringanExtra.
