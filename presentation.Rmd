@@ -49,7 +49,7 @@ knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618,
 
 #Background image
 style_xaringan(
-  title_slide_background_image = "/Users/fengqinhao/final-project/img/bcak2.jpeg"
+  title_slide_background_image = "./img/bcak2.jpeg"
 )
 ```
 
@@ -137,14 +137,14 @@ plot(linear_model)
 
 # Data interpretation
 ```{r graph3, echo=FALSE,out.width = "80%"}
-knitr::include_graphics("/Users/fengqinhao/final-project/img/222.jpg")
+knitr::include_graphics("./img/222.jpg")
 ```
 
 
 ---
 # Data interpretation
 ```{r graph4, echo=FALSE,out.width = "80%"}
-knitr::include_graphics("/Users/fengqinhao/final-project/img/111.jpg")
+knitr::include_graphics("./img/111.jpg")
 ```
 ---
 class:  middle, center
