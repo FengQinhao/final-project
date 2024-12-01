@@ -1,6 +1,6 @@
 ---
 title: "Predictive Analytics for Laptop Prices"
-author: "SuspiciousEmoji <br> Zhenye Cao, Siran Luo, Yunxi Guan,Zongyang Jin, Tianmu Xu , Tianmoo Xu"
+author: "SuspiciousEmoji <br> Zhenye Cao, Siran Luo, Yunxi Guan,Zongyang Jin, Tianmu Xu , Qinhao Feng"
 institute: "University of Edinburgh"
 date: "`r Sys.Date()`"
 output:
