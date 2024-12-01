@@ -41,3 +41,11 @@ There will be two check-in points where you will have a discussion with a tutor 
 - item 1
 - item 2
 - etc.
+
+## Team members
+- Qinhao Feng (s2711578), FengQinhao
+- Siran Luo (s2727308), nakssayon
+- Tianmu Xu (s2656205), zheti544
+- Yunxi Guan (s2684636), Evildoer721114
+- Zhenye Cao (s2677857), zzy39
+- Zongyang Jin (s2670892), KevinRyan666
