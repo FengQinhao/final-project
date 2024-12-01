@@ -135,7 +135,7 @@ a, a > code {
 }
 .title-slide {
   background-color: var(--title-slide-background-color);
-  background-image: url("img/bcak2.jpeg");
+  background-image: url("/Users/fengqinhao/final-project/img/bcak2.jpeg");
   background-size: cover;
 }
 .title-slide .remark-slide-number {

@@ -1,6 +1,6 @@
 ---
-title: "Project title"
-author: "by Team-Name: User1, User2, User3, User4 & User5"
+title: "Predictive Analytics for Laptop Prices"
+author: "by Team-Name: Zhenye Cao, Siran Luo, Yunxi Guan,Zongyang Jin, Tianmu Xu , Qinhao Feng"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -12,7 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r load-lib, include = FALSE}
 library(tidyverse)
-# Add any other libraries here
+library(Metrics)
+library(ggplot2)
 
 
 
@@ -20,9 +21,60 @@ library(tidyverse)
 
 
 ```{r load-data, include=FALSE}
-# load your data here and any pre-processing/cleaning 
-#  that you need for your report.
+# Load your data
+laptop_data <- read.csv("~/final-project/data/laptop_data_cleaned.csv")
 
+# Preview the data
+head(laptop_data)
+
+# Check for missing values
+colSums(is.na(laptop_data))
+
+# Remove missing values
+laptop_data <- laptop_data %>% drop_na()
+
+# Descriptive statistics
+summary(laptop_data)
+
+# Correlation matrix for numeric variables
+cor_matrix <- laptop_data %>%
+  select(Price, SSD, Weight, Ppi, Ram) %>%
+  cor()
+print(cor_matrix)
+
+# Split into training and testing datasets
+set.seed(123)
+train_index <- sample(1:nrow(laptop_data), 0.8 * nrow(laptop_data))
+train_data <- laptop_data[train_index, ]
+test_data <- laptop_data[-train_index, ]
+
+# Train improved linear regression model
+linear_model <- lm(
+  Price ~ Weight + Ppi + SSD + Cpu_brand + TypeName + Ram,
+  data = train_data
+)
+linear_model_2 <- lm(Price ~ ., data = train_data)
+
+# Model evaluation
+summary(linear_model)
+summary(linear_model_2)
+
+# Predict on test data
+y_pred <- predict(linear_model, newdata = test_data)
+
+# Calculate RMSE
+rmse_value <- rmse(test_data$Price, y_pred)
+cat("Linear Model RMSE:", rmse_value, "\n")
+
+# Actual vs Predicted Plot
+ggplot(data.frame(Actual = test_data$Price, Predicted = y_pred), aes(x = Actual, y = Predicted)) +
+  geom_point(color = "blue", alpha = 0.6) +
+  geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
+  labs(title = "Actual vs Predicted (Linear Model)", x = "Actual Price", y = "Predicted Price")
+
+# Residual diagnostics
+par(mfrow = c(2, 2))  
+plot(linear_model)
 
 
 
