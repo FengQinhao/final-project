@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="by Team-Name: Zhenye Cao, Siran Luo, Yunxi Guan,Zongyang Jin, Tianmu Xu , Qinhao Feng" />
+<meta name="author" content="by Team-Name: Zhenye Cao, Siran Luo, Yunxi Guan,Zongyang Jin, Tianmu Xu , Qinhao Feng(Shawn Feng)" />
 
 <meta name="date" content="2024-12-01" />
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Predictive Analytics for Laptop Prices</h1>
 <h4 class="author">by Team-Name: Zhenye Cao, Siran Luo, Yunxi
-Guan,Zongyang Jin, Tianmu Xu , Qinhao Feng</h4>
+Guan,Zongyang Jin, Tianmu Xu , Qinhao Feng(Shawn Feng)</h4>
 <h4 class="date">2024-12-01</h4>
 
 </div>
@@ -360,47 +360,155 @@ Guan,Zongyang Jin, Tianmu Xu , Qinhao Feng</h4>
 
 <div id="research-question" class="section level2">
 <h2>Research Question</h2>
-<p>Describe your research question here. Include why this question might
-be of interest.</p>
+<p>The objective of our project is to investigate how various factors
+influence laptop prices. We cleaned the data and utilized methods such
+as descriptive analysis, data visualization, and modeling to identify
+the variables affecting the price.</p>
+<p>The analysis employs tools like correlation matrices, linear
+regression, and visualization techniques to gain insights and build a
+predictive model. The outcomes include pricing trends, identification of
+significant predictors of price, and an evaluation of the predictive
+model. These results can inform decisions in the laptop market and guide
+both consumers effectively.</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Briefly describe your dataset here - include a description of the key
-variables you will be investigating. Include a citation for your data.
-See <a href="http://libraryguides.vu.edu.au/c.php?g=386501&amp;p=4347840" class="uri">http://libraryguides.vu.edu.au/c.php?g=386501&amp;p=4347840</a>
-for guidance on proper citation for datasets. If you got your data off
-the web, make sure to state the retrieval date.</p>
+<p>Data Description</p>
+<p>First, Company, which includes popular brands like Apple and Dell.
+The TypeName indicates the different type of the laptop, such as gaming
+laptops or ultrabooks.RAM represents the temporary storage used for
+active data, which impacts performance and multitasking
+capabilities.Weight reflects the portability of the laptop, and Price
+is.</p>
+<p>Additionally, we have Touchscreen (1 for yes, 0 for no) and IPS
+display (1 for yes, 0 for no).PPI (Pixels Per Inch) measures screen
+sharpness—the higher the PPI, the clearer the image. The CPU brand, like
+Intel Core i7, while HDD and SSD refer to storage capacity and
+speed.</p>
+<p>Finally, the GPU brand impacts graphics performance, and the OS
+mostly indicates Windows as the operating system.</p>
+<p>Model Building</p>
+<p>In this model-building phase, our objective was to predict the price
+of laptops (Price) based on various factors. Initially, we explored the
+dataset by checking for missing values, applying transformations, and
+then used a linear regression model to assess the impact of each
+predictor on the target variable (Price). The model was subsequently
+refined to ensure its validity and relevance.</p>
+<p>We first build a model with all variables, to analyze the influence
+of each variable. After constructing the initial model, we examined the
+significance (p-values) of each predictor using T-tests. T-tests helped
+identify variables that were individually significant in predicting the
+target variable (Price). For example, Ram, Ppi, and SSD showed low
+p-values, indicating their strong individual effects on Price.
+Conversely, some variables had high p-values, suggesting they were not
+statistically significant.</p>
+<p>Using p-values from T-tests, we systematically removed insignificant
+variables from the model. For example, variables such as TouchScreen
+were excluded due to their high p-values (greater than 0.05), indicating
+their minimal contribution to predicting the target variable. This
+stepwise process ensured that only variables with significant individual
+contributions remained in the model. Additionally, the large number of
+companies made the model more complex, potentially leading to biases in
+data interpretation. To focus on the relationship between price and
+hardware characteristics, we decided to remove the Company variable in
+the new model, thereby disregarding the impact of brand.</p>
+<p>The final model includes the following predictors: Ram, Weight, Ppi,
+SSD, Cpu_brand, TypeName, and their interaction terms. We assessed the
+model’s fit using the adjusted R-squared (Adjusted R²). The final model
+achieved an R² of 0.8024, indicating that it explains 80.24% of the
+variability in laptop prices. Additionally, residuals were checked to
+ensure that the basic assumptions of linear regression were met:
+linearity, homoscedasticity, and normality.</p>
+<p>In terms of prediction, the model showed minimal differences between
+predicted and actual prices, demonstrating good predictive performance.
+The Root Mean Squared Error (RMSE) was 0.2995415, suggesting that the
+model performs well on the test dataset. We also build the Actual and
+Predicted plot to check the model, it compares the true laptop prices
+with the prices predicted by the linear regression model, which helps us
+to assess the model’s predictive performance. The majority of points
+close to the diagonal line, indicating that the model performs well for
+most predictions</p>
+<p>Model Checking</p>
+<p>This section aims to check the assumptions for our final model.</p>
+<p>Residuals vs Fitted: The residuals are mostly scattered around zero,
+suggesting that the model captures much of the variation. And there are
+no apparent systematic patterns. Therefore, the linearity assumption is
+not violated. However, the red smoothing line shows a slight curvature
+at the end of the plot, so there might have some evidence against the
+linearity assumption. The residuals have a roughly constant spread
+across all fitted values, which indicates the homoscedasticity. There
+seems to be outliers far from the majority of residuals, which may
+influence the model, so use Cook’s Distance to assess their impact
+later.</p>
+<p>Q-Q Plot of Residuals: The residuals align well with the diagonal
+line in the middle, confirming that the majority follow a normal
+distribution. Although a slight light-tailed distribution may be
+detected, points fit the line adequately. While this may not
+significantly impact the model’s predictive capability, transforming the
+response variable could improve normality if required for inference.</p>
+<p>Scale-Location Plot: The plot shows a random scatter of points around
+the horizontal line. This suggests that the residuals have constant
+variance across the range of fitted values. By contrast, the spread of
+residuals increases slightly with fitted values, as evidenced by the
+upward trend in the red line. This indicates mild heteroscedasticity.
+While minor, applying weighted least squares regression or response
+transformations may improve the model’s performance.</p>
+<p>Residuals vs Leverage: Points 981, 982, and 210 exhibit high leverage
+and fall near the Cook’s Distance threshold, making them influential
+observations. However, because of the uniqueness of each observation
+(i.e. different properties of computers might have different influence
+on price), dropping an observation will mean that we don’t have specific
+data representing a particular property, causing our model unable to
+produce valid estimation of the impact of properties on computer price.
+Therefore, we decided not to drop any observation.</p>
 </div>
 <div id="findings" class="section level2">
 <h2>Findings</h2>
-<p>The write-up of your project and findings go here.</p>
-<p>Think of this as the text of your presentation with some extra detail
-to cover what there was not time to discuss in the presentation. This
-might include any assumptions you made when doing your analysis, any
-limitations of the work you have done or any ideas you have for future
-work. Feel free to split this section into subsections to make it easier
-to read.</p>
-<p>The length should be roughly 1,500 words. If you want to use a word
-count addin, you can install this by copying and pasting the following
-into RStudio:</p>
-<p><code>devtools::install_github(&quot;benmarwick/wordcountaddin&quot;, type = &quot;source&quot;, dependencies = TRUE)</code></p>
-<p>You will then need to restart RStudio. Once you have done that,
-select the text you want to count the words of, go to Addins, and select
-the <code>Word count</code> addin. This addin counts words using two
-different algorithms, but the results should be similar and as long as
-you’re in the ballpark of 1,500 words, you’re good! The addin will
-ignore code chunks and only count the words in prose. If you don’t want
-to use the addin you can always copy and paste the text into Microsoft
-Word to do a Word Count!</p>
-<p>You can also load your data here and present any analysis results /
-plots. Make sure to hide your code with <code>echo = FALSE</code> unless
-the point you are trying to make is about the code itself, in which case
-you should show your code.</p>
+<p>The regression analysis reveals key factors influencing laptop
+prices. Among continuous variables, RAM has the strongest positive
+impact on price, with a coefficient of 0.0251, indicating that increased
+memory significantly raises laptop prices. PPI, which measures display
+quality, also has a positive influence (0.00269), with higher resolution
+displays leading to higher prices. Weight, however, has a smaller effect
+(0.0514), suggesting that lighter laptops are not necessarily more
+expensive.</p>
+<p>For categorical variables, CPU type significantly affects pricing.
+Laptops with Intel Core i7 processors (0.5182) are the most expensive,
+followed by those with Intel Core i5 (0.4608) and Intel Core i3
+(0.1492), while “other Intel” processors (-0.2132) reduce prices. Laptop
+type also plays a role, with workstations (0.5627) and gaming laptops
+(0.1297) commanding higher prices, whereas netbooks (-0.0796) and
+notebooks (-0.1515) are cheaper. Storage type contributes as well, with
+SSDs (0.0006718) adding a premium due to their faster performance.</p>
+<p>Brand is another critical factor. High-end brands like Google
+(0.739), LG (0.679), and Apple (0.555) significantly increase prices due
+to their premium positioning. Mid-range brands, such as Dell (0.353), HP
+(0.341), and Lenovo (0.214), offer moderate price premiums, balancing
+value and reliability. Budget brands, including Vero (-0.845), Mediacom
+(-0.673), and Chuwi (-0.691), reduce prices, targeting affordability
+over premium features.</p>
+<p>Advantages: The study uses cleansing data, descriptive statistics,
+and regression modeling to provide an in-depth analysis of the factors
+that influence laptop prices. Model adjustment R square up to 0.8024,
+indicating a strong prediction accuracy, and the visual diagnosis
+validated the main hypothesis.</p>
+<p>Limitations: By excluding branding from the compact model, the effect
+of consumer preferences may be overlooked. Slight heteroscedasticity and
+high impact observations may affect the estimates. Data sets may not be
+fully representative of global price trends.</p>
+<p>Ethical considerations: The exclusion of certain variables may lead
+to bias in the conclusions. Transparent reporting and ensuring that the
+analysis is not abused, such as reinforcing unfair pricing, is
+critical.</p>
+<p>Future Work: Nonlinear models can be introduced to further explore
+variable interactions, and heteroscedasticity problems can be treated by
+weighted regression or transformation.</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
-<p>List any references here. You should, at a minimum, list your data
-source.</p>
+<p>kaggle, “Laptop Price Prediction cleaned Dataset” [Online]. Available
+at: <a href="https://www.kaggle.com/datasets/gyanprakashkushwaha/laptop-price-prediction-cleaned-dataset/code" class="uri">https://www.kaggle.com/datasets/gyanprakashkushwaha/laptop-price-prediction-cleaned-dataset/code</a>
+(Accessed: <strong>25 November 2024</strong>)</p>
 </div>
 
 
